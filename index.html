@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>GifTastic</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+</head>
+			<div class="jumbotron jumbotron-fluid">
+			  <div class="container">
+			    <h1 class="display-3">GifTastic Sports: </h1>
+			    <p class="lead">A New Funny Look at Sports Finest.</p>
+			  </div>
+			</div>
+	<body>
+
+		<h1>Sport Search</h1>
+
+    <!-- Sports will get dumped here -->
+    <div id="sports-view"></div><br>
+
+    <form id="sport-form">
+      <label for="sport-input">Pick a Sport</label>
+      <input type="text" id="sport-input">
+      <br>
+
+      <!-- Button triggers new sport to be added -->
+      <input id="add-sport" type="submit" value="Pick a Sport">
+    </form>
+
+	
+			
+
+
+			<div id="gifs-appear-here">
+  			
+
+        <img src="https://media1.giphy.com/media/200_s.gif" data-still="https://media3.giphy.com/media/200_s.gif" data-animate="https://media3.giphy.com/media/200_s.gif" data-state="still" class="gif">
+        <img src="https://media2.giphy.com/media/l41lXGxBwXYFcJoJ2/200.gif?cid=e1bb72ff5a26e6666439746349790f74/200_s.gif" data-still="https://media2.giphy.com/media/l41lXGxBwXYFcJoJ2/200.gif?cid=e1bb72ff5a26e6666439746349790f74/200_s.gif" data-animate="https://media2.giphy.com/media/l41lXGxBwXYFcJoJ2/200.gif?cid=e1bb72ff5a26e6666439746349790f74/200_s.gif" data-state="still" class="gif">
+        <img src="https://media0.giphy.com/media/q5hVhkKwKHDuo/200.gif?cid=e1bb72ff5a26e6666439746349790f74/200_s.gif" data-still="https://media0.giphy.com/media/q5hVhkKwKHDuo/200.gif?cid=e1bb72ff5a26e6666439746349790f74/200_s.gif" data-animate="https://media0.giphy.com/media/q5hVhkKwKHDuo/200.gif?cid=e1bb72ff5a26e6666439746349790f74/200_s.gif" data-state="still" class="gif">
+
+
+      </div>
+
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  			
+  			<script type="text/javascript">
+
+          //$("button").on("click", function() {
+  			
+
+  				var sports = ["swimming", "tennis", "basketball", "baseball", "soccer", "running", "cycling", "football"];
+
+
+  			function renderButtons() {
+
+        
+        			$("#sports-view").empty();
+
+        // Loop through the array of sports, then generate buttons for each sport in the array
+        			for(i=0;i < sports.length; i++){
+          
+
+          			var a = $("<button>");
+          
+          			a.addClass("sport");
+
+          			a.attr("data-sport", sports[i]);
+
+					a.text(sports[i]);
+          
+			$("#sports-view").append(a);
+
+        	} 
+
+          }
+
+      
+      $("#add-sport").on("click", function(event) {
+        
+        event.preventDefault();
+
+        
+        var sport = $("#sport-input").val().trim();
+        sports.push(sport);
+        renderButtons();
+      });
+
+      renderButtons();
+
+
+
+
+
+  				
+
+          $("button").on("click", function() {
+      			
+      			var sport = $(this).attr("data-sport");
+      			var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        						sport + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+      
+      			$.ajax({
+          				url: queryURL,
+          				method: "GET"
+        				})
+        				.done(function(response) {
+          				
+          				var results = response.data;
+
+          		for (var i = 0; i < results.length; i++) {
+
+           
+
+    		var gifDiv = $("<div class='item'>");
+
+            var rating = results[i].rating;
+
+            var p = $("<p>").text("Rating: " + rating);
+
+            var sportImage = $("<img>");
+            sportImage.attr("src", results[i].images.fixed_height.url);
+
+            gifDiv.prepend(p);
+            gifDiv.prepend(sportImage);
+
+
+            $("#gifs-appear-here").prepend(gifDiv);
+          }
+        });
+                $(".gif").on("click", function() {
+
+              var state = $(this).attr("data-state");
+
+
+              if (state === "still"){
+                $(this).attr("src", $(this).attr("data-animate"));
+                $(this).attr("data-state", "animate");
+              }
+              else {
+                $(this).attr("src", $(this).attr("data-still"));
+                $(this).attr("data-state", "still");
+              }
+            });
+
+    
+
+  				
+
+
+
+
+  	});
+			
+			</script>
+	</body>
+</html>
